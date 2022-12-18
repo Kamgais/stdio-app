@@ -1,12 +1,37 @@
+import React , {useEffect, useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import {db} from './firebaseConfig';
+import { getDocs, query, collection, where } from 'firebase/firestore';
+import LoginScreen from './src/screens/LoginScreen';
+
+
 
 export default function App() {
+  const [users,setUsers] = useState([]);
+  const getUser = async () => {
+    let newUsers = [];
+    try {
+      const q = query(collection(db, "users"))
+      const userDocument = await getDocs(q);
+      userDocument.forEach((doc) => {
+        newUsers.push({...doc.data(), id: doc.id})
+      })
+     
+
+      setUsers(newUsers);
+      
+    } catch (error) {
+      console.log(error)
+    }
+   
+  }
+
+  useEffect(() => {
+    getUser().then(() => {})
+  },[])
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+   <LoginScreen/>
   );
 }
 
