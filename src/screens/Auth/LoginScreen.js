@@ -1,28 +1,32 @@
 import { View, Text, StyleSheet,TextInput, ImageBackground, Alert} from 'react-native'
 import React from 'react';
-import Button from '../shared/Button';
+import Button from '../../shared/Button';
 import { Db } from '../../services/db';
 import { Formik } from 'formik'
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
     const image = {uri: 'https://images.unsplash.com/photo-1634621388881-cb328098136d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80'}
 
 
     const saveUser = async (data) => {
-        console.log(data)
+        //console.log(data)
         try {
             const response = await Db.login(data.username, data.password);
+            console.log(response);
+            Alert.alert("Logged", response.username, [
+              {
+                  text: "Ok",
+                  onPress: () => console.log('Ask me later')
+              }
+          ])
             
-                console.log('hey')
-            Alert.alert("Error", response, [
-                {
-                    text: "Ok",
-                    onPress: () => console.log('Ask me later')
-                }
-            ])
-            
-        } catch (error) {
-           console.log(error) 
+          } catch (error) {
+          Alert.alert("Error", error.message, [
+            {
+                text: "Ok",
+                onPress: () => console.log('Ask me later')
+            }
+        ])
         }
         
 
@@ -55,7 +59,7 @@ const LoginScreen = () => {
                 />
                 <Button
                 title='Login'
-                onPress={props.handleSubmit}
+                onPress={() => navigation.navigate('app')}
                 />
             </View>
           )}  
