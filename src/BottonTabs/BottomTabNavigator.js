@@ -1,11 +1,10 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/Home/HomeScreen';
 import CalendarScreen from '../screens/CalendarScreen';
-import MyCoursesScreen from '../screens/MyCoursesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import HomeNavigator from '../navigations/HomeNavigator';
+import MyCoursesNavigator from '../navigations/MyCoursesNavigator';
 import Icon  from 'react-native-vector-icons/Ionicons';
 
 
@@ -38,7 +37,7 @@ function  BottomTabNavigator() {
      }
   })}>
       <Tab.Screen name="Home" component={HomeNavigator} />
-      <Tab.Screen name="MyCourses" component={MyCoursesScreen} />
+      <Tab.Screen name="MyCourses" component={MyCoursesNavigator} />
       <Tab.Screen name="Calendar" component={CalendarScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

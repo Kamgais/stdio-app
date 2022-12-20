@@ -1,12 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { useSelector } from 'react-redux';
 import  Icon  from 'react-native-vector-icons/Ionicons';
 
 const Header = () => {
+  const {user} = useSelector((state) => state.auth)
   return (
     <View style={styles.containerHeader}>
     <Text style={styles.headerTitle}>STDIO</Text>
-    <Icon name='add-circle-sharp' size={40} style={styles.headedrIcon} color= '#ff7979'/>
+    {user.role === 'teacher' && <Icon name='add-circle-sharp' size={40} style={styles.headedrIcon} color= '#ff7979'/>}
   </View>
   )
 }
