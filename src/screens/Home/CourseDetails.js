@@ -1,12 +1,14 @@
-import { View, Text , StyleSheet} from 'react-native'
+import { View, Text , StyleSheet, ScrollView} from 'react-native'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import Button from '../../shared/Button'
 import Header from '../../shared/Header'
+import ROUTES from '../../routes/routes'
 
 const CourseDetails = ({navigation, route}) => {
-    
+    const {user} = useSelector((state) => state.auth)
   return (
-    <View style={styles.container}>
+   <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center'}}>
        <Header/>
        <View style={styles.content}>
         <Text style={styles.label}>Course :</Text>
@@ -15,8 +17,19 @@ const CourseDetails = ({navigation, route}) => {
         <Text style={styles.itemContent}>{route.params.professorName}</Text>
         <Text style={styles.label}>Participants :</Text>
         <Text style={styles.itemContent}>{route.params.participants}</Text>
+
+        {
+         user.role === 'student' && (<>
+            <Text style={styles.label} >Description</Text>
+            <Text style={styles.itemContent}>{route.params.desc}</Text>
+            <View style={styles.button}>
+               <Button title='Participate' onPress={() => navigation.navigate(ROUTES.HOME_QR_SCANN, route.params)}/>
+            </View>
+            </>
+         )
+        }
        </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -24,7 +37,7 @@ const styles = StyleSheet.create({
  container : {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center'
+   
  },
  content: {
     width: '80%',
@@ -39,6 +52,11 @@ const styles = StyleSheet.create({
  },
  itemContent: {
     fontSize: 20
+ },
+ button : {
+   width: '100%',
+   marginTop: 30,
+   alignItems: 'center'
  }
 })
 
