@@ -18,10 +18,11 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       paddingVertical: 12,
       paddingHorizontal: 32,
-      borderRadius: 4,
+      borderRadius: 5,
       elevation: 3,
       backgroundColor: '#FF7979',
-      width: 226,
+      width: 210,
+     
       
     },
     text: {

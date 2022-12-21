@@ -15,8 +15,7 @@ const CourseDetails = ({navigation, route}) => {
         <Text style={styles.itemContent}>{route.params.title}</Text>
         <Text style={styles.label}>Professor's name :</Text>
         <Text style={styles.itemContent}>{route.params.professorName}</Text>
-        <Text style={styles.label}>Participants :</Text>
-        <Text style={styles.itemContent}>{route.params.participants}</Text>
+    
 
         {
          user.role === 'student' && (<>

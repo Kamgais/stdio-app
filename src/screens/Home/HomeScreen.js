@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, RefreshControl, ActivityIndicator } from 'react-native'
 import  Icon  from 'react-native-vector-icons/Ionicons';
 import React, {useEffect, useState} from 'react'
 import Button from '../../shared/Button'
@@ -10,8 +10,11 @@ import ROUTES from '../../routes/routes';
 
 
 
+
 const HomeScreen = ({navigation}) => {
   const [courses, setCourses] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const fetchCourses = async() => {
     try {
@@ -25,13 +28,26 @@ const HomeScreen = ({navigation}) => {
 
   }
 
+
+  const onRefresh = async() => {
+    setRefreshing(true);
+    setLoading(true)
+    await fetchCourses()
+    setRefreshing(false)
+    setLoading(false)
+  }
+
   useEffect(() => {
     fetchCourses();
   },[])
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center'}}>
+    <ScrollView style={styles.container} contentContainerStyle={{ alignItems: 'center'}}  refreshControl={<RefreshControl  refreshing={refreshing}  onRefresh={onRefresh}/>}>
       <Header/>
-
+            {
+                isLoading && (
+                  <ActivityIndicator size="large" color="#ff7979" style={styles.loader}/>
+                )
+              }
       <View style= {styles.containerList}>
         <View style={styles.containerListHeader}>
           <Text style= {styles.containerListTitle}>Courses Available</Text>
