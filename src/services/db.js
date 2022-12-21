@@ -185,7 +185,8 @@ static async logout() {
         this.isError = true;
         this.error = {message : 'you are already registred for this course'}
      } else {
-        const newStudent = {...response, courses : [...response.courses, course]};
+        const {id: responseId, ...others} = response;
+        const newStudent = {...others, courses : [...response.courses, course]};
         try {
             await setDoc(studentRef, newStudent);
             this.isError = false; 
@@ -205,6 +206,40 @@ static async logout() {
         }
      })
       
+
+    }
+
+
+    static async postCourseForTeacher(id, course) {
+        let courseId;
+        const courseRef = doc(collection(db, 'courses'));
+        try {
+            await setDoc(courseRef, course);
+           // console.log(response)
+           const q = query(collection(db,"courses"),where("title","==", course.title))
+           const snap = await getDocs(q);
+           snap.forEach((doc) => {
+            courseId = doc.id;
+           })
+            const teacher = await this.getTeacherByUserId(id);
+            const teacherRef = doc(db, 'teachers', teacher.id);
+            const {id: teacherId, ...others} = teacher;
+            const newTeacher = {...others, courses: [...teacher.courses, {...course, id: courseId}]};
+            await setDoc(teacherRef, newTeacher);
+            this.isError = false;
+        } catch (error) {
+           this.isError = true;
+           this.error = error; 
+        }
+
+        return new Promise((resolve, reject) => {
+            if(!this.isError){
+                resolve({message : "Your new course is successfully registred"})
+            } else {
+                reject({message: 'Error by saving the new course'})
+            }
+        })
+        
 
     }
 

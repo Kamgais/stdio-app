@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, RefreshControl} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { useSelector } from 'react-redux'
 import { Db } from '../../services/db';
@@ -9,24 +9,32 @@ const MyCoursesScreen = ({navigation}) => {
   const {user} = useSelector((state) => state.auth);
   const [student, setStudent] = useState();
   const [teacher, setTeacher] = useState();
+  const [refreshing, setRefreshing] = useState(false)
 
+const fetchPerson = async () => {
+  if(user.role === 'student') {
+    const response = await Db.getStudentByUserId(user.id);
+    console.log(response.courses)
+  
+    setStudent(response)
+  } else {
+    const response = await Db.getTeacherByUserId(user.id);
+    setTeacher(response);
+  }
 
+}
   useEffect(() => {
-    (async() => {
-      if(user.role === 'student') {
-        const response = await Db.getStudentByUserId(user.id);
-        console.log(response.courses)
-      
-        setStudent(response)
-      } else {
-        const response = await Db.getTeacherByUserId(user.id);
-        setTeacher(response);
-      }
-      
-    })()
+    fetchPerson()
   },[])
+
+
+  const onRefresh = async() => {
+    setRefreshing(true);
+    await fetchPerson();
+    setRefreshing(false)
+  }
   return (
-    <ScrollView contentContainerStyle={{alignItems: 'center'}}>
+    <ScrollView contentContainerStyle={{alignItems: 'center'}} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
       <Header/>
       <View style={styles.containerList}>
         <View style={styles.courseList}>
