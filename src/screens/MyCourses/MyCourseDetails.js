@@ -26,8 +26,6 @@ const MyCourseDetails = ({route}) => {
         <Text style={styles.itemContent}>{course?.title}</Text>
         <Text style={styles.label}>Professor's name :</Text>
         <Text style={styles.itemContent}>{course?.professorName}</Text>
-        <Text style={styles.label}>Participants :</Text>
-        <Text style={styles.itemContent}>{course?.participants}</Text>
         <Text style={styles.label} >Description</Text>
         <Text style={styles.itemContent}>{course?.desc}</Text>
 
