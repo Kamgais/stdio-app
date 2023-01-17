@@ -1,5 +1,5 @@
 import { db } from "../../firebaseConfig";
-import { getDocs, query, collection, where, getDoc, doc, setDoc } from 'firebase/firestore';
+import { getDocs, query, collection, where, getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export class Db {
@@ -160,7 +160,7 @@ static async logout() {
             const courseRef = doc(db, 'courses', `${id}`);
             const snap = await getDoc(courseRef);
             this.isError = false;
-            courseResponse = snap.data(); 
+            courseResponse =  {...snap.data(), id: snap.id}
         } catch (error) {
           this.isError = true;
           this.error = error;  
@@ -168,7 +168,7 @@ static async logout() {
 
         return new Promise((resolve, reject) => {
             if(!this.isError) {
-                resolve(courseResponse)
+                resolve({...courseResponse})
             } else {
                 reject(this.error);
             }
@@ -241,6 +241,123 @@ static async logout() {
         })
         
 
+    }
+
+
+    static async setStudentOnline(id, studentId) {
+        console.log('begin')
+        let student;
+        let courseResponse;
+        try {
+             courseResponse =  await this.getCourseById(id);
+             console.log(id) 
+             console.log(courseResponse) 
+            
+        } catch (error) {
+            this.error = 'failed to check in'
+            this.isError = true;
+           console.log('no course found with this id') 
+        }
+
+        const studentRef = doc(db, "students", studentId);
+        const studentSnapshot = await getDoc(studentRef);
+         console.log('middle')
+        if(studentSnapshot.exists()) {
+            student = studentSnapshot.data();
+        } else {
+            this.error = 'failed to check in'
+            console.log('error by searching current student')
+            this.isError = true;
+            Promise.reject({message: error})
+        }
+
+        const oldOnlines = courseResponse.online;
+        const courseRef = doc(db, "courses", id);
+        
+        try {
+            await updateDoc(courseRef, {
+                online: [...oldOnlines, student.userId]
+            })
+            this.isError = false;
+        } catch (error) {
+            this.error = 'failed to check in'
+           console.log('failed to update course model') 
+           this.isError = true;
+        }
+       
+        return new Promise((resolve, reject) => {
+            if(this.isError) {
+                reject({error : "there is an error by saving student"})
+            }
+            resolve({message: "saved successfully"})
+        })
+     
+    }
+
+
+
+    static async setStudentOffline(id, userId) {
+        let course;
+
+        try {
+          course = await this.getCourseById(id); 
+          const newOnlines = course.online.filter((onlineId) => onlineId !== userId);
+          const courseRef = doc(db, "courses", id);
+          await updateDoc(courseRef, {
+            online : newOnlines
+          })
+          this.isError = false
+        } catch (error) {
+          this.isError = true;
+          console.log(error) 
+        }
+
+        return new Promise((resolve, reject) => {
+            if(this.isError) {
+                reject({message: this.error})
+            }
+
+            resolve({message: "successfully checkout"})
+        })
+    }
+
+
+    static async getUsersByIds(ids) {
+        let userList = [];
+        
+        for(const id of ids) {
+           // console.log('fffff')
+           console.log(id)
+           try {
+           const userRef = doc(db, "users", id)
+            const userSnapshot = await getDoc(userRef);
+            if(userSnapshot.exists()) {
+            userList.push({...userSnapshot.data(), id: userSnapshot.id})
+            this.isError = false;
+                }
+
+            } catch (error) {
+                console.log(error) 
+                this.isError = true;
+                this.error = 'fail to get online students'; 
+              }
+
+            }
+        
+       
+
+        return new Promise((resolve, reject) => {
+            if(this.isError) {
+                reject({data: this.error})
+            }
+            resolve(userList)
+        })
+       
+    }
+
+
+    static async getUserById(id) {
+        let userResponse
     }
 
 }
