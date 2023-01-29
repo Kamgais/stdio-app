@@ -22,7 +22,7 @@ const CourseDetails = ({navigation, route}) => {
             <Text style={styles.label} >Description</Text>
             <Text style={styles.itemContent}>{route.params.desc}</Text>
             <View style={styles.button}>
-               <Button title='Participate' onPress={() => navigation.navigate(ROUTES.HOME_QR_SCANN, route.params)}/>
+               <Button title='Participate' onPress={() => navigation.navigate(ROUTES.HOME_QR_SCANN, {...route.params, type: 'REGISTER'})}/>
             </View>
             </>
          )
