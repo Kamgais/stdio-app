@@ -17,7 +17,7 @@ const ProfileScreen = ({navigation}) => {
         <Text style={globalStyles.label}>Username :</Text>
         <Text style={globalStyles.itemContent}>{user.username}</Text>
         <Text style={globalStyles.label}>Password :</Text>
-        <Text style={globalStyles.itemContent}>{user.password}</Text>
+        <Text style={globalStyles.itemContent}>******</Text>
       </View>
       </View>
       <Button title='LOGOUT' onPress={() => navigation.navigate('Login')}/>

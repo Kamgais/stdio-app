@@ -20,9 +20,10 @@ const MyCourseDetails = ({route, navigation}) => {
 
     useEffect(() => {
         (async() => {
+         console.log(route.params)
             const response = await Db.getCourseById(route.params.id);
             setCourse(response);
-            console.log(course)
+            console.log(response)
         })()
     },[])
 
@@ -30,15 +31,13 @@ const MyCourseDetails = ({route, navigation}) => {
     const checkIn = async (id) => {
      try {
       const studentResponse = await Db.getStudentByUserId(user.id)
-       const response = await Db.setStudentOnline(id, studentResponse.id)
-       Alert.alert('Success', response.message, [
-         {
-            text: 'OK',
-            onPress: () => {}
-         }
-       ])
+      // const response = await Db.setStudentOnline(id, studentResponse.id)
        setButtonTitle('Check Out')
        dispatch(setOnline())
+       navigation.navigate(ROUTES.HOME_QR_SCANN, {...route.params, studentId: studentResponse.id, type: 'CHECK IN'})
+    
+      
+       
      } catch (error) {
       // console.log(error)
       Alert.alert('Error', error.message, [

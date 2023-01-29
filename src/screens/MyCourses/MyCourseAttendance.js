@@ -1,25 +1,38 @@
 import { StyleSheet, Text, View, ScrollView , ActivityIndicator, RefreshControl } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../shared/Header'
+import SvgQRCode from 'react-native-qrcode-svg';
 import { Db } from '../../services/db'
 
 const MyCourseAttendance = ({route}) => {
   const [onlineUsers, setOnlineUsers] = useState([])
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [course, setCourse] = useState(null);
   useEffect(() => {
-    fetchOnlineUsers()
+    fetchCourse().then((_)=> {
+      fetchOnlineUsers()
+    })
    
   },[])
 
   const fetchOnlineUsers = async() => {
-    if(route.params.online && route.params.online !== []) {
+    if(route.params.online ) {
      
         setLoading(true)
-        const response = await Db.getUsersByIds(route.params.online);
+        console.log(course)
+        const response = await Db.getUsersByIds(course.online);
         setOnlineUsers(response)
         setLoading(false)
       }
+    }
+
+    const fetchCourse = async() => {
+      console.log(route.params.id)
+      const response = await Db.getCourseById(route.params.id);
+      console.log(response)
+      setCourse(response)
+
     }
   
 
@@ -27,7 +40,10 @@ const MyCourseAttendance = ({route}) => {
   const onRefresh = async() => {
     setRefreshing(true);
    // setLoading(true)
-    await fetchOnlineUsers()
+   // await fetchOnlineUsers()
+   fetchCourse().then((_)=> {
+    fetchOnlineUsers()
+  })
     setRefreshing(false)
     //setLoading(false)
   }
@@ -54,6 +70,10 @@ const MyCourseAttendance = ({route}) => {
         }
         
 
+      </View>
+
+      <View style={styles.qrCode}>
+       <SvgQRCode  value={route.params.id}/>
       </View>
     </ScrollView>
   )
