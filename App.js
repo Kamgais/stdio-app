@@ -1,15 +1,13 @@
-import React , {useEffect, useState} from 'react';
+import React from 'react';
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TouchableOpacity, View, Keyboard } from 'react-native';
-import {db} from './firebaseConfig';
-import { getDocs, query, collection, where } from 'firebase/firestore';
-import LoginScreen from './src/screens/Auth/LoginScreen';
+import { StyleSheet} from 'react-native';
+
 import Tabs from './src/routes/tabs';
 import {Provider as StoreProvider} from 'react-redux';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import store from './src/store';
-
+import GestureHandlerRootView from 'react-native-gesture-handler';
 
 
 
@@ -24,6 +22,7 @@ export default function App() {
      <Tabs/>
     </SafeAreaProvider>
     </StoreProvider>
+    
     
   
   );

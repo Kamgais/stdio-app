@@ -23,17 +23,33 @@ const QrScannerScreen = ({route, navigation}) => {
     },[])
 
     const handleBarCodeScanned = async ({type, data}) => {
+      let response;
         setScanned(true);
         //console.log(route.params)
+
         if(route.params.id === data) {
           try {
             setLoading(true);
-            const response  = await Db.postCourseForStudent(user.id, route.params);
+            if(route.params.type === 'REGISTER') {
+             response  = await Db.postCourseForStudent(user.id, route.params);
+            } 
+
+            if(route.params.type === 'CHECK IN') {
+               response = await Db.setStudentOnline(route.params.id, route.params.studentId)
+            }
+            
             setLoading(false)
             Alert.alert("Success", response.message, [
               {
                 text: 'OK',
-                onPress: () => {navigation.navigate(ROUTES.MY_COURSE_LIST)}
+                onPress: () => {
+                  if(route.params.type === 'CHECK IN') {
+                    navigation.goBack()
+                  } else {
+                    navigation.navigate(ROUTES.MY_COURSE_VIEW)
+                  }
+                 
+                }
               }
             ])
           } catch (error) {
@@ -46,7 +62,7 @@ const QrScannerScreen = ({route, navigation}) => {
             ])
           }
         } else {
-          alert('not good qr code for this register')
+          alert('not good qr code for this action')
         }
          
           
