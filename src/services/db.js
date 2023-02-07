@@ -2,9 +2,15 @@ import { db } from "../../firebaseConfig";
 import { getDocs, query, collection, where, getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
+
+/**
+ * @class Db (Database)
+ * for crud-Operations in firebase / firestore
+ */
 export class Db {
 
-    userRef = collection(db,"users");
+     userRef = collection(db,"users");
      userResponse ;
    
      error;
@@ -12,15 +18,16 @@ export class Db {
 
     courseRef = collection(db, "courses");
     
+
+
 /**
- * 
- * @param {username} username 
- * @param {password} password 
- * @returns Promise<void>
+ *  verify if the account already exists in database
+ * @param {string} username 
+ * @param {string} password 
+ * @returns {Promise<void>}
  */
 static async login(username, password) {
     let dbUsername;
-    
     const q = query(collection(db,"users"),where("username","==", username))
     try {
     const snap = await  getDocs(q);
@@ -60,7 +67,10 @@ static async login(username, password) {
     })
 }
 
-
+/**
+ * logout the current user => delete the current user in async storage
+ * @returns {Promise<void>}
+ */
 static async logout() {
     AsyncStorage.clear();
     return {
@@ -70,7 +80,12 @@ static async logout() {
   };
 
 
-    static async getAllCourses() {
+
+/**
+ * fetch all availables courses in the database
+ *@returns {Promise<void>}
+ */
+static async getAllCourses() {
         let courseResponse = [];
         const q = collection(db,"courses");
         try {
@@ -95,7 +110,13 @@ static async logout() {
     }
 
 
-    static async getStudentByUserId(id) {
+
+/**
+ * fetch the current student corresponding with the current user id
+ * @param {string} id 
+ * @returns {Promise<void>}
+ */
+static async getStudentByUserId(id) {
         let studentResponse;
         const q = query(collection(db,"students"),where("userId","==",`${id}`))
 
@@ -121,7 +142,12 @@ static async logout() {
     }
 
 
-    static async getTeacherByUserId(id) {
+/**
+ * fetch the current teacher corresponding with the current user id
+ * @param {string} id
+ * @returns {Promise<void>}
+ */
+static async getTeacherByUserId(id) {
         let studentResponse;
         const q = query(collection(db,"teachers"),where("userId","==",`${id}`))
 
@@ -148,13 +174,12 @@ static async logout() {
 
 
 
-    /**
-     * 
-     * @param {*} id 
-     * @returns 
-     */
-
-    static async getCourseById(id) {
+/**
+ * fetch a course corresponding to the id
+* @param {string} id 
+* @returns {Promise<void>}
+*/
+static async getCourseById(id) {
         let courseResponse;
         try {
             const courseRef = doc(db, 'courses', `${id}`);
@@ -177,8 +202,15 @@ static async logout() {
     }
 
 
-    static async postCourseForStudent(id, course) {
+/**
+ * to register a student in a course
+* @param {string} id 
+* @param {string} course
+* @returns {Promise<void>}
+*/
+static async postCourseForStudent(id, course) {
       const response = await  this.getStudentByUserId(id);
+      console.log(response)
      const foundCourse = response.courses.find((c) => c.id === course.id);
      const studentRef = doc(db, "students", response.id)
      if(foundCourse) {
@@ -186,6 +218,7 @@ static async logout() {
         this.error = {message : 'you are already registred for this course'}
      } else {
         const {id: responseId, ...others} = response;
+        console.log(response.courses)
         const newStudent = {...others, courses : [...response.courses, course]};
         try {
             await setDoc(studentRef, newStudent);
@@ -209,8 +242,13 @@ static async logout() {
 
     }
 
-
-    static async postCourseForTeacher(id, course) {
+/**
+ * to add a course by a teacher
+* @param {string} id 
+* @param {string} course
+* @returns {Promise<void>}
+*/
+static async postCourseForTeacher(id, course) {
         let courseId;
         const courseRef = doc(collection(db, 'courses'));
         try {
@@ -243,8 +281,13 @@ static async logout() {
 
     }
 
-
-    static async setStudentOnline(id, studentId) {
+/**
+ * set a student online
+* @param {string} id 
+* @param {string} studentId
+* @returns {Promise<void>}
+*/
+static async setStudentOnline(id, studentId) {
         console.log('begin')
         let student;
         let courseResponse;
@@ -295,8 +338,13 @@ static async logout() {
     }
 
 
-
-    static async setStudentOffline(id, userId) {
+/**
+ * set a student offline
+* @param {string} id 
+* @param {string} userId
+* @returns {Promise<void>}
+*/
+static async setStudentOffline(id, userId) {
         let course;
 
         try {
@@ -321,12 +369,15 @@ static async logout() {
         })
     }
 
-
-    static async getUsersByIds(ids) {
+/**
+ * fetch users with the following ids
+* @param {string[]} id 
+* @returns {Promise<void>}
+*/
+static async getUsersByIds(ids) {
         let userList = [];
         
         for(const id of ids) {
-           // console.log('fffff')
            console.log(id)
            try {
            const userRef = doc(db, "users", id)
@@ -356,8 +407,71 @@ static async logout() {
     }
 
 
-    static async getUserById(id) {
-        let userResponse
+
+    /**
+ * fetch all availables students in the database
+ *@returns {Promise<void>}
+ */
+static async getAllStudents() {
+    let studentsResponse = [];
+    const q = collection(db,"students");
+    try {
+        const snap = await getDocs(q);
+        snap.forEach((doc) => {
+            this.isError = false;
+          studentsResponse?.push({...doc.data(), id: doc.id}); 
+        })
+
+    } catch (error) {
+        this.isError = true;
+        this.error = error;
     }
+
+    return new Promise((resolve,reject) => {
+        if(!this.isError) {
+            resolve(studentsResponse);
+        } else {
+            reject(this.error);
+        }
+    })
+}
+
+
+
+static async getStudentsByCourseId(id) {
+    let courseResponse;
+    let students;
+    try {
+       courseResponse = await this.getCourseById(id)
+        students = await this.getAllStudents(); 
+        console.log(students)
+        this.isError= false
+    } catch (error) {
+       this.isError = true;
+       this.error = error;
+        
+    }
+    
+    const referencedStudents = students.filter((student) => {
+        student.courses.forEach((course) => {
+        if(course.title === courseResponse.title) {
+            return true;
+        }
+        })
+    })
+    console.log("here is good"+referencedStudents)
+
+    return new Promise((resolve,reject) => {
+               if(!this.isError) {
+                resolve(referencedStudents)
+               }  else {
+                reject(this.error)
+               }
+    })
+
+}
+
+
+   
 
 }

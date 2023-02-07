@@ -4,24 +4,43 @@ import Header from '../../shared/Header'
 import SvgQRCode from 'react-native-qrcode-svg';
 import { Db } from '../../services/db'
 
+
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const MyCourseAttendance = ({route}) => {
   const [onlineUsers, setOnlineUsers] = useState([])
-  const [refreshing, setRefreshing] = useState(false);
+ const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [course, setCourse] = useState(null);
+ 
+ 
   useEffect(() => {
-    fetchCourse().then((_)=> {
-      fetchOnlineUsers()
-    })
+    fetchCourse()
    
   },[])
 
+
+  useEffect(() => {
+    if(course !== null) {
+      fetchOnlineUsers()
+    }
+   
+  },[course])
+   
+
+
+
+  /**
+   * fetch all current online students
+   */
   const fetchOnlineUsers = async() => {
-    if(route.params.online ) {
-     
+    let response;
+    if(route.params.online) {
         setLoading(true)
         console.log(course)
-        const response = await Db.getUsersByIds(course.online);
+       response = await Db.getUsersByIds(course.online);
         setOnlineUsers(response)
         setLoading(false)
       }
@@ -36,16 +55,17 @@ const MyCourseAttendance = ({route}) => {
     }
   
 
-
+ /**
+  * async function to refresh the screen
+  */
   const onRefresh = async() => {
     setRefreshing(true);
-   // setLoading(true)
-   // await fetchOnlineUsers()
-   fetchCourse().then((_)=> {
+    fetchCourse().then((_)=> {
     fetchOnlineUsers()
+    
   })
     setRefreshing(false)
-    //setLoading(false)
+  
   }
 
   return (
@@ -63,7 +83,7 @@ const MyCourseAttendance = ({route}) => {
         {
           onlineUsers.map((item, index) => (
             <View style={styles.onlineSingle} key={index}>
-          <Text style={styles.onlineText}>{item.username.charAt(0).toUpperCase() + item.username.slice(1)}  {item.firstname.toLowerCase()}</Text>
+          <Text style={styles.onlineText}>{item.username.charAt(0).toUpperCase() + item.username.slice(1)}  {item.firstname.charAt(0).toUpperCase() + item.firstname.slice(1)}</Text>
           <View style={styles.circle}></View>
         </View>
           ))
@@ -81,6 +101,8 @@ const MyCourseAttendance = ({route}) => {
 
 export default MyCourseAttendance
 
+
+// styling the component 
 const styles = StyleSheet.create({
   container : {
     flex: 1,

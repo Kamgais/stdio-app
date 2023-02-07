@@ -8,7 +8,10 @@ import ROUTES from '../../routes/routes';
 
 
 
-
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const QrScannerScreen = ({route, navigation}) => {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -25,7 +28,7 @@ const QrScannerScreen = ({route, navigation}) => {
     const handleBarCodeScanned = async ({type, data}) => {
       let response;
         setScanned(true);
-        //console.log(route.params)
+        
 
         if(route.params.id === data) {
           try {
@@ -97,6 +100,7 @@ const QrScannerScreen = ({route, navigation}) => {
 
 export default QrScannerScreen
 
+// styling the component 
 const styles = StyleSheet.create({
     container: {
         flex: 1,

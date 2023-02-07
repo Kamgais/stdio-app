@@ -2,6 +2,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import  Icon  from 'react-native-vector-icons/Ionicons'
 
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const Device = (props) => {
   return (
    <TouchableOpacity style={styles.wrapper} onPress={props.onPress}>

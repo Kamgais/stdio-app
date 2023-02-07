@@ -9,7 +9,18 @@ import Icon  from 'react-native-vector-icons/Ionicons';
 
 
 const Tab = createBottomTabNavigator();
+
 let iconName;
+
+/**
+ * A Bottom Tab Navigator is a type of navigation 
+ * component in React Native and React Navigation library 
+ * that allows the user to switch between different screens 
+ * or routes in an app. The navigation tabs are displayed at 
+ * the bottom of the screen and provide a convenient way to access 
+ * different parts of the app.
+ * Here is the implementation of the bottom Tab System of the app
+ */
 function  BottomTabNavigator() {
   return (
     <Tab.Navigator screenOptions={ ({route}) =>({
@@ -23,8 +34,7 @@ function  BottomTabNavigator() {
      },
     
       tabBarActiveTintColor: '#ff7979',
-    // tabBarShowLabel: false,
-     tabBarIcon: ({color, size, focused}) => {
+      tabBarIcon: ({color, focused}) => {
       
       switch(route.name) {
         case 'Home' : iconName = focused? 'home-sharp' : 'home-outline'; break;
