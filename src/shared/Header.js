@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, {useState} from 'react'
-import { useSelector } from 'react-redux';
 import  Icon  from 'react-native-vector-icons/Ionicons';
 import AddCourseModal from './AddCourseModal';
 import { useAuth } from '../hooks/useAuth';

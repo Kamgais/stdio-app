@@ -68,9 +68,6 @@ const QrScannerScreen = ({route, navigation}) => {
           alert('not good qr code for this action')
         }
          
-          
-      
-       
     }
 
     if (hasPermission === null) {
@@ -89,8 +86,9 @@ const QrScannerScreen = ({route, navigation}) => {
           />
           {scanned && 
           <View style={styles.button}>
-          { isLoading && <ActivityIndicator size="large" color="#ff7979" />}
+          { isLoading && <><ActivityIndicator size="large" color="#ff7979" />
           <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
+          </> }
           </View>
           }
         </View>

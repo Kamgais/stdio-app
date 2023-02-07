@@ -209,7 +209,7 @@ static async getCourseById(id) {
 * @returns {Promise<void>}
 */
 static async postCourseForStudent(id, course) {
-      const response = await  this.getStudentByUserId(id);
+      const response = await  this.getStudentByUserId(id); 
       console.log(response)
      const foundCourse = response.courses.find((c) => c.id === course.id);
      const studentRef = doc(db, "students", response.id)
