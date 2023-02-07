@@ -1,11 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, {useState} from 'react'
-import { useSelector } from 'react-redux';
 import  Icon  from 'react-native-vector-icons/Ionicons';
 import AddCourseModal from './AddCourseModal';
+import { useAuth } from '../hooks/useAuth';
 
+
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const Header = () => {
-  const {user} = useSelector((state) => state.auth)
+  const {user} = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>

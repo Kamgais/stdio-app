@@ -1,14 +1,20 @@
 import { StyleSheet, Text, View, Modal, TextInput, ActivityIndicator, Alert } from 'react-native'
 import React, {useState} from 'react'
-import { useSelector } from 'react-redux'
 import  Icon  from 'react-native-vector-icons/Ionicons'
 import { Formik } from 'formik'
 import Button from './Button'
 import { Db } from '../services/db'
-import ROUTES from '../routes/routes'
 import * as yup from 'yup';
+import { useAuth } from '../hooks/useAuth'
 
 
+
+
+/**
+ * Yup is a JavaScript library for object schema validation. 
+ * It is often used in conjunction with forms in React or React Native, 
+ * to validate user input and ensure that the data submitted is in the correct format.
+ */
 const courseSchema = yup.object({
    title: yup.string()
    .required()
@@ -18,8 +24,14 @@ const courseSchema = yup.object({
    .min(10)
 })
 
+
+
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const AddCourseModal = ({toggle, handleToggle}) => {
-    const {user} = useSelector((state) => state.auth);
+   const {user} = useAuth();
     const [isLoading, setLoading] = useState(false);
 
     const addCourse = async(data) => {

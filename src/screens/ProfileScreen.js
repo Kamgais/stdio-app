@@ -6,6 +6,11 @@ import Icon  from 'react-native-vector-icons/Ionicons'
 import Header from '../shared/Header'
 import { globalStyles } from '../../styles/global'
 
+
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const ProfileScreen = ({navigation}) => {
   const {user} = useSelector((state) => state.auth)
   return (

@@ -5,6 +5,10 @@ import Button from '../../shared/Button'
 import Header from '../../shared/Header'
 import ROUTES from '../../routes/routes'
 
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const CourseDetails = ({navigation, route}) => {
     const {user} = useSelector((state) => state.auth)
   return (

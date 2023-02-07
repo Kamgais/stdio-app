@@ -1,45 +1,27 @@
 import { View, Text, StyleSheet,TextInput, ImageBackground, Alert, TouchableWithoutFeedback, Keyboard, ActivityIndicator} from 'react-native'
 import React, {useState} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import Button from '../../shared/Button';
-import { Db } from '../../services/db';
 import { Formik } from 'formik'
 import { login } from '../../actions/auth';
+import { IMAGE_URL } from '../../constants/constants';
 
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const LoginScreen = ({navigation}) => {
-    const image = {uri: 'https://images.unsplash.com/photo-1634621388881-cb328098136d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80'}
-    const {isLogged, user} = useSelector((state) => state.auth);
+    const image = {uri: IMAGE_URL }
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(false);
 
-    const saveUser = async (data) => {
-        //console.log(data)
-        try {
-            const response = await Db.login(data.username, data.password);
-            console.log(response);
-            Alert.alert("Logged", response.username, [
-              {
-                  text: "Ok",
-                  onPress: () => console.log('Ask me later')
-              }
-          ])
-            
-          } catch (error) {
-          Alert.alert("Error", error.message, [
-            {
-                text: "Ok",
-                onPress: () => console.log('Ask me later')
-            }
-        ])
-        }
-        
-
-    }
 
 
-
-
-    const onLogin = (user) => {
+/**
+ * 
+ * @param {any} user 
+ */
+const onLogin = (user) => {
       setLoading(true);
       dispatch(login(user)).then((response) => {
         if(response.status === 'success') {
@@ -52,8 +34,7 @@ const LoginScreen = ({navigation}) => {
           {
               text: "Ok",
               onPress: () => console.log('Ask me later') 
-
-}]
+            }]
 
     )})
 

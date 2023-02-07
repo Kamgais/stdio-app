@@ -5,12 +5,16 @@ import { Db } from '../../services/db';
 import ROUTES from '../../routes/routes';
 import Header from '../../shared/Header';
 import Button from '../../shared/Button';
-import BluetoothListModal from '../../shared/BluetoothListModal';
 import AddCourseModal from '../../shared/AddCourseModal';
 import { setOnline, setOffline } from '../../actions/auth';
 import { useAuth } from '../../hooks/useAuth';
 import { useDispatch } from 'react-redux';
 
+
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const MyCourseDetails = ({route, navigation}) => {
     const [course, setCourse] = useState({});
     const [buttonTitle, setButtonTitle] = useState('Check In');
@@ -27,19 +31,20 @@ const MyCourseDetails = ({route, navigation}) => {
         })()
     },[])
 
-
+    /**
+     * to check in
+     * @param {any} id 
+     */
     const checkIn = async (id) => {
      try {
       const studentResponse = await Db.getStudentByUserId(user.id)
-      // const response = await Db.setStudentOnline(id, studentResponse.id)
-       setButtonTitle('Check Out')
+      setButtonTitle('Check Out')
        dispatch(setOnline())
        navigation.navigate(ROUTES.HOME_QR_SCANN, {...route.params, studentId: studentResponse.id, type: 'CHECK IN'})
     
       
        
      } catch (error) {
-      // console.log(error)
       Alert.alert('Error', error.message, [
          {
             text: 'TRY AGAIN',
@@ -49,6 +54,11 @@ const MyCourseDetails = ({route, navigation}) => {
      } 
     }
 
+
+    /**
+     * to check out
+     * @param {any} id 
+     */
     const checkOut = async (id) => {
       try {
       const response = await Db.setStudentOffline(id, user.id)

@@ -1,6 +1,11 @@
 import React from 'react';
 import { Text,StyleSheet, Pressable } from 'react-native';
 
+
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const Button = (props) => {
     const {onPress, title} = props;
 

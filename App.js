@@ -1,21 +1,20 @@
 import React from 'react';
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet} from 'react-native';
-
 import Tabs from './src/routes/tabs';
 import {Provider as StoreProvider} from 'react-redux';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import store from './src/store';
-import GestureHandlerRootView from 'react-native-gesture-handler';
 
 
 
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 export default function App() {
   
-
-
-  return (
+return (
     
     <StoreProvider store = {store}>
     <SafeAreaProvider style={{flex: 1}}>
