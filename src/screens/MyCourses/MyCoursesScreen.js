@@ -1,21 +1,28 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, RefreshControl} from 'react-native'
 import React, {useEffect, useState} from 'react'
-import { useSelector } from 'react-redux'
 import { Db } from '../../services/db';
 import Header from '../../shared/Header';
 import ROUTES from '../../routes/routes';
+import { useAuth } from '../../hooks/useAuth';
 
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const MyCoursesScreen = ({navigation}) => {
-  const {user} = useSelector((state) => state.auth);
+  const {user} = useAuth();
   const [student, setStudent] = useState();
   const [teacher, setTeacher] = useState();
   const [refreshing, setRefreshing] = useState(false)
 
+
+/**
+ * async function to fetch the current student or teacher
+ */
 const fetchPerson = async () => {
+
   if(user.role === 'student') {
     const response = await Db.getStudentByUserId(user.id);
-    console.log(response.courses)
-  
     setStudent(response)
   } else {
     const response = await Db.getTeacherByUserId(user.id);
@@ -27,7 +34,9 @@ const fetchPerson = async () => {
     fetchPerson()
   },[])
 
-
+  /**
+  * async function for refreshing the screen
+  */
   const onRefresh = async() => {
     setRefreshing(true);
     await fetchPerson();
@@ -58,6 +67,8 @@ const fetchPerson = async () => {
   )
 }
 
+
+// Styling the component 
 const styles = StyleSheet.create({
   containerList:{
     marginTop: 50,

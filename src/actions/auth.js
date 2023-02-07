@@ -1,7 +1,11 @@
 import { LOGIN_SUCCESS, LOGOUT, ONLINE, OFFLINE } from "./type";
 import { Db } from "../services/db";
 
-
+/**
+ * async redux actions to login a user
+ * @param {any} user 
+ * @returns {void}
+ */
 export const login = (user) => (dispatch) => {
   return Db.login(user.username, user.password).then(
     (response) => {
@@ -22,7 +26,10 @@ export const login = (user) => (dispatch) => {
   );
 };
 
-
+/**
+ * async redux action for a user to logout
+ *  @returns {void}
+ */
 export const logout = () => async (dispatch) => {
   const response = await Db.logout();
   if (response.status === "success") {
@@ -34,12 +41,20 @@ export const logout = () => async (dispatch) => {
   }
 };
 
+/**
+ * async redux action to set a student online
+ *  @returns {void}
+ */
 export const setOnline = () => (dispatch) => {
   dispatch({
     type: ONLINE
   })
 }
 
+/**
+ * async redux action to set a student offline
+ *  @returns {void}
+ */
 export const setOffline = () => (dispatch) => {
   dispatch({
     type: OFFLINE

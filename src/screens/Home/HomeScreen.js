@@ -1,21 +1,22 @@
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, RefreshControl, ActivityIndicator } from 'react-native'
-import  Icon  from 'react-native-vector-icons/Ionicons';
 import React, {useEffect, useState} from 'react'
-import Button from '../../shared/Button'
 import { Db } from '../../services/db';
 import Header from '../../shared/Header';
 import ROUTES from '../../routes/routes';
 
 
-
-
-
-
+/**
+ * a component is a reusable piece of UI 
+ * that can receive and render data, and manage its own state.
+ */
 const HomeScreen = ({navigation}) => {
   const [courses, setCourses] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
+  /**
+   * call the Db method getAllCourses and set the current state 
+   */
   const fetchCourses = async() => {
     try {
       const response = await Db.getAllCourses();
@@ -28,8 +29,10 @@ const HomeScreen = ({navigation}) => {
 
   }
 
-
-  const onRefresh = async() => {
+ /**
+  * async function for refreshing the screen
+  */
+ const onRefresh = async() => {
     setRefreshing(true);
     setLoading(true)
     await fetchCourses()
@@ -70,7 +73,7 @@ const HomeScreen = ({navigation}) => {
   )
 }
 
-
+// styling the component 
 const styles = StyleSheet.create({
   container : {
     flex: 1,
